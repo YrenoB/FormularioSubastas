@@ -79,13 +79,10 @@ export default function MultiStepForm() {
     });
 
     const res = await fetch(
-      "https://script.google.com/macros/s/AKfycbzhL92jO5bHW1i2qr6ZljFgYziRhkOZrGcSamNAZ_2_D4PpjC3_f1KfUsSNVxzbmHNs/exec",
+      "https://script.google.com/macros/s/AKfycbz8JrFllt6FPMKulkr91eNs8Hn_h-2iKOltGDyQ_V-3zUBHe0V59L04rv7n2xExi2r1/exec",
       {
         method: "POST",
         body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data"
-        }
       }
     );
 
