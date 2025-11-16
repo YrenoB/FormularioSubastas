@@ -175,10 +175,9 @@ export default function FormStep2({ register, errors, control, handleSubmit, nex
                   required: 'Monto de garantía obligatorio',
                   valueAsNumber: true,
                   validate: (value) => {
-                    const minimo = GARANTIA_FACTOR * SMMLV_DEFAULT;
-                    return value >= minimo
+                    return value >= garantiaMinima
                       ? true
-                      : `El monto debe ser mínimo ${minimo.toLocaleString()} COP`;
+                      : `El monto debe ser mínimo ${garantiaMinima.toLocaleString()} COP`;
                   }
                 })}
               />
@@ -205,7 +204,7 @@ export default function FormStep2({ register, errors, control, handleSubmit, nex
                 required: 'Entidad emisora obligatoria',
                 minLength: { value: 3, message: 'Mínimo 3 caracteres' },
                 pattern: {
-                  value: /^[A-Za-z0-9&\s]+$/,
+                  value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9.,\-\s&#%+/()'"]{3,150}$/,
                   message: 'Solo se permiten letras, números, espacios y el símbolo &'
                 },
                 validate: (v) =>
@@ -223,7 +222,7 @@ export default function FormStep2({ register, errors, control, handleSubmit, nex
                 required: 'Número del instrumento obligatorio',
                 minLength: { value: 8, message: 'Mínimo 8 caracteres' },
                 maxLength: { value: 15, message: 'Máximo 15 caracteres' },
-                pattern: { value: /^[A-Za-z0-9\-]+$/, message: 'Sólo caracteres alfanuméricos y guiones' },
+                pattern: { value: /^[A-Za-z0-9-]+$/, message: 'Sólo caracteres alfanuméricos y guiones' },
               })}
             />
             <div className="invalid-feedback">{errors.instrumentoNumero?.message}</div>
@@ -238,8 +237,19 @@ export default function FormStep2({ register, errors, control, handleSubmit, nex
                 required: 'Fecha de expedición obligatoria',
                 validate: (v) => {
                   if (!v) return 'Fecha obligatoria';
-                  const today = new Date();
-                  if (v > today) return 'La fecha de expedición no puede ser futura';
+
+                  const fecha = new Date(v);
+                  fecha.setHours(0, 0, 0, 0);
+
+                  const hoy = new Date();
+                  hoy.setHours(0, 0, 0, 0);
+
+                  if (fecha.getTime() === hoy.getTime())
+                    return 'La fecha de expedición no puede ser la fecha actual';
+
+                  if (fecha > hoy)
+                    return 'La fecha de expedición no puede ser futura';
+
                   return true;
                 },
               }}
@@ -266,13 +276,16 @@ export default function FormStep2({ register, errors, control, handleSubmit, nex
                 validate: (v) => {
                   if (!v) return 'Vigencia obligatoria';
 
+                  const vig = new Date(v);
+                  vig.setHours(0, 0, 0, 0);
+
                   const hoy = new Date();
                   hoy.setHours(0, 0, 0, 0);
 
                   const exp = watchFechaExp;
 
                   // 1) No puede ser futura
-                  if (v > hoy) return 'La vigencia no puede ser una fecha futura';
+                  if (vig.getTime() > hoy.getTime()) return 'La vigencia no puede ser una fecha futura';
 
                   // 2) Debe ser igual o posterior a la expedición
                   if (exp && v < exp)

@@ -109,6 +109,7 @@ button.buttons:focus-visible {
 }
 .custom-check input[type="checkbox"] {
   appearance: none;
+  margin-top: 0.3rem;
   -webkit-appearance: none;
   background-image: none !important;
   width: 22px;
@@ -132,6 +133,28 @@ button.buttons:focus-visible {
   left: 2px;
   top: -4.5px;
 }
+.btn-confirm {
+  background-color: #AFE951 !important;
+  color: #fff !important;
+  padding: 8px 18px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+.btn-cancel {
+  background-color: #666666 !important;
+  color: #fff !important;
+  padding: 8px 18px !important;
+  border-radius: 6px !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+.btn-confirm:hover {
+  background-color: #255B46 !important;
+}
+.btn-cancel:hover {
+  background-color: #999999 !important;
+}
 @media (max-width: 1300px) {
   .cardPpal {
     margin: 0% 10% 0.5% 10%;
@@ -142,7 +165,78 @@ button.buttons:focus-visible {
     font-size: 0.95rem;
   }
   .cardPpal {
-    margin: 0% 2% 0.5% 2%;
+    margin: 0% 1% 0.5% 1%;
+  }
+  .cardBodyPpal {
+    padding: 4% 2% 3% 2%;
+  }
+  .borderGreen {
+    padding: 0;
+    margin: 0;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  h6 {
+    font-size: 1em;
+  }
+  div strong {
+    font-size: 0.9em;
+  }
+  .titulos {
+    font-size: 0.8em;
+  }
+  h4 {
+    font-size: 1.2em;
+  }
+  label {
+    font-size: 0.9em;
+  }
+  button.buttons,
+  .buttons,
+  button.buttons:active,
+  button.buttons:focus,
+  button.buttons:hover {
+    font-size: 0.9em;
+  }
+  .btnAgregar {
+    font-size: 0.8em;
+  }
+  h5 {
+    font-size: 1em;
+  }
+  p {
+    font-size: 0.9em;
+  }
+  .buttonsBack {
+    font-size: 0.9em;
+  }
+  li {
+    font-size: 0.9em;
+  }
+  .swal2-popup {
+    width: 90% !important;
+    padding: 1.5rem !important;
+  }
+  .swal2-title {
+    font-size: 1.2rem !important;
+  }
+  .swal2-html-container {
+    font-size: 1rem !important;
+  }
+  .swal2-actions {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  .swal2-actions button {
+    width: 100% !important;
+    margin: 0 !important;
+  }
+  .btn-confirm,
+  .btn-cancel {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 1rem !important;
   }
 }
 @media (max-width: 480px) {

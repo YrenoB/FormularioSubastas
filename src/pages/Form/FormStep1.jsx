@@ -7,7 +7,7 @@ import Logos from '../../assets/logosEmpresas.png';
 
 export default function FormStep1({ register, errors, handleSubmit, next }) {
 
-  const telefonoPattern = /^(3\d{9}|6\d{8})$/; 
+  const telefonoPattern = /^(3\d{9}|601\d{7}|6\d{7}|0\d{2}\d{7}|018000\d{6})$/;
   const onValid = () => next();
 
   return (
@@ -20,17 +20,17 @@ export default function FormStep1({ register, errors, handleSubmit, next }) {
       <div className="borderGreen rounded-4 mb-3 p-4">
         <div className="mb-3">
           <strong>Convoca:</strong>
-          <div className="p-2 mt-1">[Nombre de la Empresa o la Sociedad Fiduciaria designada para tal efecto]</div>
+          <div className="p-2 mt-1 titulos">[Nombre de la Empresa o la Sociedad Fiduciaria designada para tal efecto]</div>
         </div>
 
         <div className="row mb-3">
           <div className="col-md-6">
             <label className="form-label"><strong>Fecha de Convocatoria:</strong></label>
-            <div className="p-2">[Fecha de publicación de la Convocatoria Oficial]</div>
+            <div className="p-2 titulos">[Fecha de publicación de la Convocatoria Oficial]</div>
           </div>
           <div className="col-md-6">
             <label className="form-label"><strong>Plazo Límite de Presentación:</strong></label>
-            <div className="p-2">[Fecha y Hora Límite]</div>
+            <div className="p-2 titulos">[Fecha y Hora Límite]</div>
           </div>
         </div>
         <img src={Logos} className="img-fluid img-logos" alt="logosEmpresas" />
@@ -65,8 +65,8 @@ export default function FormStep1({ register, errors, handleSubmit, next }) {
               required: 'Nombre o razón social obligatorio',
               minLength: { value: 3, message: 'Mínimo 3 caracteres' },
               pattern: {
-                value: /^[A-Za-z0-9 &]+$/,
-                message: 'Sólo se permiten letras, números, espacios y &',
+                value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9.,\-\s&#%+/()'"]{3,150}$/,
+                message: 'Sólo se permiten letras, números, espacios, puntos guiones y &',
               },
               validate: (v) =>
                 /[<>]/.test(v) ? 'Contiene caracteres inválidos' : true,
@@ -82,9 +82,13 @@ export default function FormStep1({ register, errors, handleSubmit, next }) {
             className={`form-control ${errors.nit ? 'is-invalid' : ''}`}
             {...register('nit', {
               required: 'Cédula o NIT obligatorio',
+              validate: {
+                noCeroInicial: (value) =>
+                  !value.startsWith('0') || 'No puede iniciar en 0',
+              },
               pattern: {
-                value: /^[0-9]+$/,
-                message: 'Solo números',
+                value: /^\d{6,12}$/,
+                message: 'Solo números',              
               },
               minLength: {
                 value: 6,
@@ -140,6 +144,7 @@ export default function FormStep1({ register, errors, handleSubmit, next }) {
             className={`form-control ${errors.cedulaRep ? 'is-invalid' : ''}`}
             {...register('cedulaRep', {
               required: 'Cédula del representante obligatoria',
+              valueAsNumber: true,
               pattern: { value: /^[0-9]+$/, message: 'Sólo números' },
               minLength: { value: 6, message: 'Mínimo 6 dígitos' },
               maxLength: { value: 10, message: 'Máximo 10 dígitos' },
@@ -168,7 +173,8 @@ export default function FormStep1({ register, errors, handleSubmit, next }) {
               className={`form-control ${errors.telefono ? 'is-invalid' : ''}`}
               {...register('telefono', {
                 required: 'Teléfono obligatorio',
-                pattern: { value: telefonoPattern, message: 'Formato teléfono inválido (ej: celular inicia con 3)' },
+                valueAsNumber: true,
+                pattern: { value: telefonoPattern, message: 'Formato teléfono inválido sin espacios, sólo números. (ej: celular inicia con 3 o fijo inicia por 6 o 0)' },
               })}
             />
             <div className="invalid-feedback">{errors.telefono?.message}

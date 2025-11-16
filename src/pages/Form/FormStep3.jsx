@@ -1,8 +1,40 @@
+import Swal from "sweetalert2";
 import { FaTrash, FaPlus } from "react-icons/fa";
 import { FaLongArrowAltLeft, FaLongArrowAltRight  } from 'react-icons/fa';
 
 export default function FormStep3({ register, errors, fields, append, remove, handleSubmit, next, back }) {
 
+  const handleRemoveProject = (index, remove) => {
+    Swal.fire({
+      title: "¿Estás seguro?",
+      text: "Este proyecto será eliminado permanentemente.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      customClass: {
+        confirmButton: "btn-confirm",
+        cancelButton: "btn-cancel"
+      },
+      buttonsStyling: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        remove(index);
+
+        Swal.fire({
+          title: "Proyecto eliminado",
+          text: "El proyecto ha sido eliminado correctamente.",
+          icon: "success",
+          confirmButtonText: "Aceptar",
+          customClass: {
+            confirmButton: "btn-confirm"
+          },
+          buttonsStyling: false
+        });
+      }
+    });
+  };
+  
   const onValid = () => next();
 
   return (
@@ -20,7 +52,7 @@ export default function FormStep3({ register, errors, fields, append, remove, ha
             <div className="card-body">
               <div className="d-flex justify-content-between align-items-center mb-2">
                 <strong>Proyecto #{index + 1}</strong>
-                <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => remove(index)} disabled={fields.length === 1}><FaTrash /> Eliminar</button>
+                <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => handleRemoveProject(index, remove)} disabled={fields.length === 1}><FaTrash /> Eliminar</button>
               </div>
 
               <div className="row gx-2 gy-2">
@@ -38,8 +70,8 @@ export default function FormStep3({ register, errors, fields, append, remove, ha
                         minLength: { value: 5, message: 'Mínimo 5 caracteres' },
                         validate: (v) => {
                           if (/[<>]/.test(v)) return 'Contiene caracteres inválidos';
-                          if (!/^[A-Za-z0-9 _\-&]+$/.test(v))
-                            return 'Sólo se permiten letras, números, espacios, -, _, &';
+                          if (!/^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9.,\-\s&#%+/()'"]{3,150}$/.test(v))
+                            return 'Sólo se permiten letras, números, espacios, puntos guiones y &';
                           return true;
                         }
                       })}
@@ -51,7 +83,10 @@ export default function FormStep3({ register, errors, fields, append, remove, ha
                   <label className="form-label">Ubicación (Dirección e identificación de la Zona Receptora) *</label>
                   <input
                     className={`form-control ${errors.proyectos?.[index]?.ubicacion ? 'is-invalid' : ''}`}
-                    {...register(`proyectos.${index}.ubicacion`, { required: 'Ubicación obligatoria' })}
+                    {...register(`proyectos.${index}.ubicacion`, { 
+                      required: 'Ubicación obligatoria', 
+                      minLength: { value: 10, message: 'Mínimo 10 caracteres' },
+                    })}
                   />
                   <div className="invalid-feedback">{errors.proyectos?.[index]?.ubicacion?.message}</div>
                 </div>

@@ -93,3 +93,9 @@ a:hover {
     background-color: #f9f9f9;
   }
 }
+@media (max-width: 767px) {
+  h1 {
+    font-size: 1.8em;
+    line-height: 1.0;
+  }
+}

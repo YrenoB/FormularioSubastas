@@ -1,6 +1,13 @@
+import { useEffect } from "react";
 import { FaLongArrowAltLeft, FaCheck } from 'react-icons/fa';
 
-export default function FormStep4({ register, errors, back, onSubmitFinal }) {
+export default function FormStep4({ register, watch, setValue, errors, back, onSubmitFinal }) {
+
+  useEffect(() => {
+    const hoy = new Date().toLocaleDateString("es-CO");
+    setValue("firmaFecha", hoy);
+  }, [setValue]);
+
   return (
     <>
       <div className="borderGreen rounded-4 mb-3 p-4">
@@ -18,13 +25,24 @@ export default function FormStep4({ register, errors, back, onSubmitFinal }) {
         </ul>
         
 
-        <div className="form-check mb-3 custom-check">
-          <input id="acepta" className={`form-check-input ${errors.acepta ? 'is-invalid' : ''}`} type="checkbox" {...register('acepta', { required: 'Debe aceptar los términos y condiciones' })} />
-          <label className="form-check-label" htmlFor="acepta">
+        <div className="form-check mb-3 custom-check d-flex align-items-start">
+          <input 
+            id="acepta" 
+            className={`form-check-input ${errors.acepta ? 'is-invalid' : ''}`} 
+            type="checkbox" 
+            {...register('acepta', { required: 'Debe aceptar los términos y condiciones' 
+
+            })} 
+          />
+          <label className="form-check-label ms-2" htmlFor="acepta">
             Declaro bajo la gravedad de juramento que los datos son veraces y que acepto los términos y condiciones de la subasta.
           </label>
-          <div className="invalid-feedback">{errors.acepta?.message}</div>
         </div>
+          {errors.acepta && (
+            <div className="invalid-feedback d-block">
+              {errors.acepta.message}
+            </div>
+          )}
       </div>
 
       <div className="borderGreen rounded-4 mb-3 p-4">
@@ -78,9 +96,9 @@ export default function FormStep4({ register, errors, back, onSubmitFinal }) {
               type="text"
               className={`form-control ${errors.firmaNombre ? 'is-invalid' : ''}`}
               {...register('firmaNombre', {
-                required: 'Nombre del Representante Legal obligatorio',
+                required: 'Nombre del representante Legal obligatorio',
                 minLength: { value: 3, message: 'Mínimo 3 caracteres' },
-                validate: (v) => (/[<>]/.test(v) ? 'Contiene caracteres inválidos' : true),
+                pattern: { value: /^[A-Za-zÀ-ÿ\s]+$/, message: 'Sólo letras y espacios' },
               })}
             />
             <div className="invalid-feedback">{errors.firmaNombre?.message}</div>
@@ -91,11 +109,8 @@ export default function FormStep4({ register, errors, back, onSubmitFinal }) {
           <input
             type="text"
             className={`form-control ${errors.firmaFecha ? 'is-invalid' : ''}`}
-            readOnly
-            value={new Date().toLocaleDateString("es-CO")}
-            {...register("firmaFecha", {
-              required: "La fecha de diligenciamiento es obligatoria",
-            })}
+            disabled
+            value={watch("firmaFecha")}
           />
         </div>
       </div>

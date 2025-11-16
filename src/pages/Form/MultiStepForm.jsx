@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useForm, useFieldArray } from "react-hook-form";
+import Swal from 'sweetalert2';
 import FormStep1 from './FormStep1';
 import FormStep2 from './FormStep2';
 import FormStep3 from './FormStep3';
 import FormStep4 from './FormStep4';
 import ProgressBar from './ProgressBar';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion as Motion } from 'framer-motion';
 import LogoRenobo from '../../assets/logoRenobo.png';
 import './MultiStepForm.css';
 
@@ -15,8 +16,9 @@ export default function MultiStepForm() {
   const {
     register,
     control,
+    watch, 
+    setValue,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     mode: 'onBlur',
@@ -97,11 +99,23 @@ export default function MultiStepForm() {
 
       const result = await response.json();
       console.log("Formulario enviado exitosamente:", result);
-      alert("Formulario enviado exitosamente!"); // Or a more sophisticated success message
-      // Optionally, reset the form or navigate to a success page
+      Swal.fire({
+        title: '¡Formulario enviado!',
+        text: 'Tu información ha sido registrada exitosamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#AFE951',
+      });
     } catch (error) {
       console.error("Error al enviar formulario:", error);
-      alert("Error al enviar formulario. Por favor, inténtelo de nuevo."); // Or a more sophisticated error message
+
+      Swal.fire({
+        title: 'Error al enviar el formulario',
+        text: 'Por favor, inténtalo de nuevo.',
+        icon: 'error',
+        confirmButtonText: 'Reintentar',
+        confirmButtonColor: '#FE525E',
+      });
     }
   };
 
@@ -117,7 +131,7 @@ export default function MultiStepForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="container-fluid py-4">
           <AnimatePresence mode="wait">
-            <motion.div
+            <Motion.div
               key={step}
               variants={variants}
               initial="enter"
@@ -131,25 +145,25 @@ export default function MultiStepForm() {
                 <div className="card-body cardBodyPpal">
 
                   {/* BARRA DE PROGRESO DENTRO DEL CARD */}
-                  <motion.div
+                  <Motion.div
                     initial={{ width: 0, opacity: 0 }}
                     animate={{ width: '100%', opacity: 1 }}
                     transition={{ duration: 0.6, ease: 'easeOut' }}
                     className="mb-4"
                   >
                     <ProgressBar step={step} total={totalSteps} />
-                  </motion.div>
+                  </Motion.div>
 
                   {/* CONTENIDO DEL STEP */}
                   {step === 1 && <FormStep1 register={register} errors={errors} handleSubmit={handleSubmit} next={next} />}
                   {step === 2 && <FormStep2 register={register} errors={errors} control={control} handleSubmit={handleSubmit} next={next} back={back} />}
                   {step === 3 && <FormStep3 register={register} errors={errors} fields={fields} append={append} remove={remove} handleSubmit={handleSubmit} next={next} back={back} />}
-                  {step === 4 && <FormStep4 register={register} errors={errors} back={back} onSubmitFinal={handleSubmit(onSubmit)} />}
+                  {step === 4 && <FormStep4 register={register} watch={watch} setValue={setValue} errors={errors} back={back} onSubmitFinal={handleSubmit(onSubmit)} />}
                 
                 </div>
               </div>
 
-            </motion.div>
+            </Motion.div>
           </AnimatePresence>
         </div>
       </form>
