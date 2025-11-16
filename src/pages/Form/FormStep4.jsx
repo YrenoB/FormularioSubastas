@@ -1,6 +1,6 @@
 import { FaLongArrowAltLeft, FaCheck } from 'react-icons/fa';
 
-export default function FormStep4({ register, errors, back }) {
+export default function FormStep4({ register, errors, back, onSubmitFinal }) {
   return (
     <>
       <div className="borderGreen rounded-4 mb-3 p-4">
@@ -80,7 +80,7 @@ export default function FormStep4({ register, errors, back }) {
           <FaLongArrowAltLeft /> Atrás
         </button>
 
-        <button type="submit" className="btn buttons" >
+        <button type="submit" className="btn buttons" onClick={onSubmitFinal} >
           Enviar formulario <FaCheck />
         </button>
       </div>

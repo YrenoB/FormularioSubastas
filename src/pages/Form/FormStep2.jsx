@@ -247,8 +247,8 @@ export default function FormStep2({ register, errors, control, handleSubmit, nex
                 <DatePicker
                   className={`form-control ${errors.fechaExpedicion ? 'is-invalid' : ''}`}
                   placeholderText="dd/MM/yyyy"
-                  selected={field.value}
-                  onChange={(d) => field.onChange(d)}
+                  selected={field.value ? new Date(field.value) : null}
+                  onChange={(d) => field.onChange(d ? d.toISOString().split("T")[0] : "")}
                   dateFormat="dd/MM/yyyy"
                 />
               )}
@@ -285,8 +285,8 @@ export default function FormStep2({ register, errors, control, handleSubmit, nex
                 <DatePicker
                   className={`form-control ${errors.vigenciaInstrumento ? 'is-invalid' : ''}`}
                   placeholderText="dd/MM/yyyy"
-                  selected={field.value}
-                  onChange={(d) => field.onChange(d)}
+                  selected={field.value ? new Date(field.value) : null}
+                  onChange={(d) => field.onChange(d ? d.toISOString().split("T")[0] : "")}
                   dateFormat="dd/MM/yyyy"
                 />
               )}
