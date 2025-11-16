@@ -44,7 +44,32 @@ export default function FormStep4({ register, errors, back, onSubmitFinal }) {
 
         <div className="mb-3">
           <label htmlFor="formFileSign" className="form-label">Firma del Representante Legal *</label>
-          <input className="form-control" type="file" id="formFileSign" />
+          <input
+            className={`form-control ${errors.formFileSign ? 'is-invalid' : ''}`}
+            type="file"
+            id="formFileSign"
+            accept=".pdf,.xls,.xlsx"
+            {...register("formFileSign", {
+              required: "La firma es obligatoria",
+              validate: {
+                checkFileType: (value) => {
+                  const file = value?.[0];
+                  if (!file) return "Debe adjuntar un archivo";
+                  const allowedTypes = ["application/pdf", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+                  if (!allowedTypes.includes(file.type)) return "Formato no permitido. Solo PDF, XLS o XLSX";
+                  return true;
+                },
+                checkFileSize: (value) => {
+                  const file = value?.[0];
+                  if (!file) return "Debe adjuntar un archivo";
+                  const maxSize = 60 * 1024 * 1024; // 60MB
+                  if (file.size > maxSize) return "El archivo no debe superar los 60MB";
+                  return true;
+                },
+              },
+            })}
+          />
+          <div className="invalid-feedback">{errors.formFileSign?.message}</div>
         </div>
 
         <div className="col-md-12">

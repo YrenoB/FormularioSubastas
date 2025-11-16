@@ -61,48 +61,47 @@ export default function MultiStepForm() {
 
   const onSubmit = async (data) => {
     try {
-      // --- 1️⃣ Enviar datos planos ---
-      const formDataPlain = new FormData();
+      const formData = new FormData();
+
+      // Append all text fields
       Object.keys(data).forEach(key => {
-        if (key !== "proyectos" &&
+        if (key === "proyectos") {
+          formData.append(key, JSON.stringify(data[key])); // Stringify projects array
+        } else if (
             key !== "certificadoExistencia" &&
             key !== "estadosFinancieros" &&
             key !== "autorizacionSubasta" &&
-            key !== "sarlaft") {
-          formDataPlain.append(key, data[key]);
+            key !== "sarlaft" &&
+            key !== "formFileSign"
+        ) {
+          formData.append(key, data[key]);
         }
       });
 
-      const resPlain = await fetch("https://script.google.com/macros/s/AKfycbyzQOLQ6MWJSnrpvFWbDPTQquQ6uP3I2au3IE3hAoeQqS9HEQ9nk1TUtJW_7h3H05ye/exec", {
-        method: "POST",
-        body: formDataPlain
-      });
-      const resultPlain = await resPlain.json();
-      console.log("Respuestas guardadas:", resultPlain);
-
-      // --- 2️⃣ Enviar proyectos + archivos ---
-      const formDataProjects = new FormData();
-      formDataProjects.append("email", data.email);
-      formDataProjects.append("proyectos", JSON.stringify(data.proyectos));
-
+      // Append files
       if (data.certificadoExistencia?.[0])
-        formDataProjects.append("certificadoExistencia", data.certificadoExistencia[0]);
+        formData.append("certificadoExistencia", data.certificadoExistencia[0]);
       if (data.estadosFinancieros?.[0])
-        formDataProjects.append("estadosFinancieros", data.estadosFinancieros[0]);
+        formData.append("estadosFinancieros", data.estadosFinancieros[0]);
       if (data.autorizacionSubasta?.[0])
-        formDataProjects.append("autorizacionSubasta", data.autorizacionSubasta[0]);
+        formData.append("autorizacionSubasta", data.autorizacionSubasta[0]);
       if (data.sarlaft?.[0])
-        formDataProjects.append("sarlaft", data.sarlaft[0]);
+        formData.append("sarlaft", data.sarlaft[0]);
+      if (data.formFileSign?.[0])
+        formData.append("formFileSign", data.formFileSign[0]);
 
-      const resProjects = await fetch("https://script.google.com/macros/s/AKfycbyQgu9TTK098LgnmniwLQq3lSt_XAvy7CBBSuKinjh_NIO0JNY-rxzg__lvtc75vs6_/exec", {
-        method: "POST",
-        body: formDataProjects
+      const response = await fetch('http://localhost:3001/api/upload', {
+        method: 'POST',
+        body: formData,
       });
-      const resultProjects = await resProjects.json();
-      console.log("Proyectos y archivos guardados:", resultProjects);
 
+      const result = await response.json();
+      console.log("Formulario enviado exitosamente:", result);
+      alert("Formulario enviado exitosamente!"); // Or a more sophisticated success message
+      // Optionally, reset the form or navigate to a success page
     } catch (error) {
       console.error("Error al enviar formulario:", error);
+      alert("Error al enviar formulario. Por favor, inténtelo de nuevo."); // Or a more sophisticated error message
     }
   };
 
