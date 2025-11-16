@@ -5,9 +5,10 @@ import { FaEnvelope, FaPhoneAlt, FaLongArrowAltRight } from 'react-icons/fa';
 import Logos from '../../assets/logosEmpresas.png';
 
 
-export default function FormStep1({ register, errors, next }) {
+export default function FormStep1({ register, errors, handleSubmit, next }) {
 
   const telefonoPattern = /^(3\d{9}|6\d{8})$/; 
+  const onValid = () => next();
 
   return (
     <>
@@ -57,34 +58,65 @@ export default function FormStep1({ register, errors, next }) {
 
         <div className="col-md-12 col-lg-6">
           <label className="form-label">Nombre o Razón Social *</label>
-            <input
-              type="text"
-              className={`form-control ${errors.razonSocial ? 'is-invalid' : ''}`}
-              {...register('razonSocial', {
-                required: 'Nombre o razón social obligatorio',
-                minLength: { value: 3, message: 'Mínimo 3 caracteres' },
-                validate: (v) => (/[<>]/.test(v) ? 'Contiene caracteres inválidos' : true),
-              })}
-            />
-            <div className="invalid-feedback">{errors.razonSocial?.message}</div>
+          <input
+            type="text"
+            className={`form-control ${errors.razonSocial ? 'is-invalid' : ''}`}
+            {...register('razonSocial', {
+              required: 'Nombre o razón social obligatorio',
+              minLength: { value: 3, message: 'Mínimo 3 caracteres' },
+              pattern: {
+                value: /^[A-Za-z0-9 &]+$/,
+                message: 'Sólo se permiten letras, números, espacios y &',
+              },
+              validate: (v) =>
+                /[<>]/.test(v) ? 'Contiene caracteres inválidos' : true,
+            })}
+          />
+          <div className="invalid-feedback">{errors.razonSocial?.message}</div>
         </div>
 
-        <div className="col-md-12  col-lg-6">
+        <div className="col-md-12 col-lg-6">
           <label className="form-label">Cédula o NIT *</label>
-            <input
-              type="text"
-              className={`form-control ${errors.nit ? 'is-invalid' : ''}`}
-              {...register('nit', { required: 'Cédula o NIT obligatorio', pattern: { value: /^[0-9]+$/, message: 'Sólo números' } })}
-            />
-            <div className="invalid-feedback">{errors.nit?.message}</div>
+          <input
+            type="text"
+            className={`form-control ${errors.nit ? 'is-invalid' : ''}`}
+            {...register('nit', {
+              required: 'Cédula o NIT obligatorio',
+              pattern: {
+                value: /^[0-9]+$/,
+                message: 'Solo números',
+              },
+              minLength: {
+                value: 6,
+                message: 'Debe tener mínimo 6 dígitos',
+              },
+              maxLength: {
+                value: 12,
+                message: 'Debe tener máximo 12 dígitos',
+              },
+            })}
+          />
+          <div className="invalid-feedback">{errors.nit?.message}</div>
         </div>
 
-        <div className="col-md-12">
+        <div className="col-md-12"> 
           <label className="form-label">Domicilio Principal *</label>
           <input
             className={`form-control ${errors.domicilio ? 'is-invalid' : ''}`}
             placeholder="Ciudad/País. Ej.: Bogotá/Colombia"
-            {...register('domicilio', { required: 'Domicilio obligatorio' })}
+            {...register('domicilio', {
+              required: 'Domicilio obligatorio',
+              pattern: {
+                value: /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]+\/[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 ]+$/,
+                message: 'Formato inválido. Usa Ciudad/País',
+              },
+              validate: (v) =>
+                v.split('/').length === 2 &&
+                v.split('/')[0].trim().length > 1 &&
+                v.split('/')[1].trim().length > 1
+                  ? true
+                  : 'Debe contener Ciudad y País válidos',
+            })}
           />
           <div className="invalid-feedback">{errors.domicilio?.message}</div>
         </div>
@@ -147,7 +179,7 @@ export default function FormStep1({ register, errors, next }) {
       </div>
 
       <div className="text-end mt-5">
-        <button type="button" className="btn buttons" onClick={next}>
+        <button type="button" className="btn buttons" onClick={handleSubmit(onValid)}>
           Siguiente <FaLongArrowAltRight />
         </button>
       </div>

@@ -4,12 +4,12 @@ import { FaLongArrowAltLeft, FaLongArrowAltRight  } from 'react-icons/fa';
 import "react-datepicker/dist/react-datepicker.css";
 import { Placeholder } from "react-bootstrap";
 
-export default function FormStep2({ register, errors, control, watch, next, back  }) {
+export default function FormStep2({ register, errors, control, handleSubmit, next, back, }) {
   const SMMLV_DEFAULT = 1423500;
   const GARANTIA_FACTOR = 150;
   const garantiaMinima = SMMLV_DEFAULT * GARANTIA_FACTOR;
   
-  const fechaExp = useWatch({
+  const watchFechaExp = useWatch({
     control,
     name: "fechaExpedicion",
   });
@@ -41,13 +41,14 @@ export default function FormStep2({ register, errors, control, watch, next, back
     return true;
   };
 
+  const onValid = () => next();
 
   return (
     <>
       <h4>II. REQUISITOS FINANCIEROS Y DOCUMENTACIÓN LEGAL</h4>
 
       <br />
-      <p class="text-muted small">
+      <p className="text-muted small">
         Al adjuntar los documentos requeridos, tenga en cuenta que todos los archivos deben estar en formato <strong>PDF, XLS o XLSX</strong> y no deben superar un tamaño máximo de <strong>60 MB</strong>.
       </p>
       <div className="borderGreen rounded-4 mb-3 p-4">
@@ -57,17 +58,17 @@ export default function FormStep2({ register, errors, control, watch, next, back
         </p>
 
         <div className="mb-3">
-          <label htmlFor="formFile1" className="form-label"><strong>Certificado de Existencia y Representación Legal *</strong></label>
+          <label htmlFor="certificadoExistencia" className="form-label"><strong>Certificado de Existencia y Representación Legal *</strong></label>
           <p className="text-muted small">Expedido con una antelación no mayor a treinta (30) días calendario a la fecha de cierre de la inscripción. 
             Debe acreditarse que el representante legal del proponente tenga facultades para poder presentarse a la subasta 
             o allegar el documento del órgano competente de la persona jurídica correspondiente que ostente dichas facultades.
           </p>
           <input
-            className={`form-control ${errors.formFile1 ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.certificadoExistencia ? 'is-invalid' : ''}`}
             type="file"
-            id="formFile1"
+            id="certificadoExistencia"
             accept=".pdf,.xls,.xlsx"
-            {...register("formFile1", {
+            {...register("certificadoExistencia", {
               required: "Este documento es obligatorio",
               validate: {
                 checkFileType: validateFileType,
@@ -76,20 +77,20 @@ export default function FormStep2({ register, errors, control, watch, next, back
             })}
           />
 
-          <div className="invalid-feedback">{errors.formFile1?.message}</div>
+          <div className="invalid-feedback">{errors.certificadoExistencia?.message}</div>
         </div>
 
         <div className="mb-3">
-          <label htmlFor="formFile2" className="form-label"><strong>Estados Financieros Auditados *</strong></label>
+          <label htmlFor="estadosFinancieros" className="form-label"><strong>Estados Financieros Auditados *</strong></label>
           <p className="text-muted small">
             Últimos estados financieros auditados disponibles (cierre fiscal último año)
           </p>
           <input
-            className={`form-control ${errors.formFile2 ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.estadosFinancieros ? 'is-invalid' : ''}`}
             type="file"
-            id="formFile2"
+            id="estadosFinancieros"
             accept=".pdf,.xls,.xlsx"
-            {...register("formFile2", {
+            {...register("estadosFinancieros", {
               required: "Este documento es obligatorio",
               validate: {
                 checkFileType: validateFileType,
@@ -97,22 +98,22 @@ export default function FormStep2({ register, errors, control, watch, next, back
               },
             })}
           />
-          <div className="invalid-feedback">{errors.formFile2?.message}</div>
+          <div className="invalid-feedback">{errors.estadosFinancieros?.message}</div>
         </div>
 
         <div className="mb-3">
-          <label htmlFor="formFile3" className="form-label"><strong>Autorización para participar en la Subasta *</strong></label>
+          <label htmlFor="autorizacionSubasta" className="form-label"><strong>Autorización para participar en la Subasta *</strong></label>
           <p className="text-muted small">El representante legal deberá contar con la autorización expresa del órgano competente, 
             otorgada conforme a lo dispuesto en los estatutos sociales de la respectiva empresa, cuando sus facultades de representación 
             estén sujetas a límites de cuantía o a la aprobación previa de la junta directiva o del órgano decisorio correspondiente, 
             para efectuar la compra de los certificados de derechos de construcción y desarrollo en la subasta.
           </p>
           <input
-            className={`form-control ${errors.formFile3 ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.autorizacionSubasta ? 'is-invalid' : ''}`}
             type="file"
-            id="formFile3"
+            id="autorizacionSubasta"
             accept=".pdf,.xls,.xlsx"
-            {...register("formFile3", {
+            {...register("autorizacionSubasta", {
               required: "Este documento es obligatorio",
               validate: {
                 checkFileType: validateFileType,
@@ -121,21 +122,21 @@ export default function FormStep2({ register, errors, control, watch, next, back
             })}
           />
 
-          <div className="invalid-feedback">{errors.formFile3?.message}</div>
+          <div className="invalid-feedback">{errors.autorizacionSubasta?.message}</div>
         </div>
 
         <div className="mb-3">
-          <label htmlFor="formFile4" className="form-label"><strong>Documentación que respalde la verificación de SARLAFT *</strong></label>
+          <label htmlFor="sarlaft" className="form-label"><strong>Documentación que respalde la verificación de SARLAFT *</strong></label>
           <p className="text-muted small">Previa instrucción de la Sociedad Fiduciaria designada para tal efecto, la Empresa de Renovación 
             y Desarrollo Urbano de Bogotá D.C., le solicitará al proponente adjuntar los soportes y documentos que certifiquen la aprobación 
             del proceso de SARLAFT.
           </p>
           <input
-            className={`form-control ${errors.formFile4 ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.sarlaft ? 'is-invalid' : ''}`}
             type="file"
-            id="formFile4"
+            id="sarlaft"
             accept=".pdf,.xls,.xlsx"
-            {...register("formFile4", {
+            {...register("sarlaft", {
               required: "Este documento es obligatorio",
               validate: {
                 checkFileType: validateFileType,
@@ -144,7 +145,7 @@ export default function FormStep2({ register, errors, control, watch, next, back
             })}
           />
 
-          <div className="invalid-feedback">{errors.formFile4?.message}</div>
+          <div className="invalid-feedback">{errors.sarlaft?.message}</div>
         </div>
       </div>
 
@@ -160,6 +161,10 @@ export default function FormStep2({ register, errors, control, watch, next, back
         <div className="row gx-3 gy-2">
           <div className="col-md-12">
             <label className="form-label">Monto de la Garantía (COP) *</label>
+            <p className="text-muted small"> El valor de la garantía debe ser equivalente a ciento 
+              cincuenta {GARANTIA_FACTOR} (ciento cincuenta) Salarios Mínimos Mensuales Legales Vigentes (SMMLV). 
+              El valor se solicita en pesos colombianos (COP).
+            </p>
             <div className="input-group">
               <span className="input-group-text">COP</span>
               <input
@@ -167,9 +172,14 @@ export default function FormStep2({ register, errors, control, watch, next, back
                 className={`form-control ${errors.garantiaMonto ? 'is-invalid' : ''}`}
                 placeholder="Valor en pesos colombianos"
                 {...register('garantiaMonto', {
-                  required: 'Monto de garantía obligatorio',                
+                  required: 'Monto de garantía obligatorio',
                   valueAsNumber: true,
-                  min: { value: 1, message: 'Debe ser mayor que cero' },
+                  validate: (value) => {
+                    const minimo = GARANTIA_FACTOR * SMMLV_DEFAULT;
+                    return value >= minimo
+                      ? true
+                      : `El monto debe ser mínimo ${minimo.toLocaleString()} COP`;
+                  }
                 })}
               />
               <div className="invalid-feedback">{errors.garantiaMonto?.message}</div>
@@ -194,7 +204,12 @@ export default function FormStep2({ register, errors, control, watch, next, back
               {...register('entidadEmisora', {
                 required: 'Entidad emisora obligatoria',
                 minLength: { value: 3, message: 'Mínimo 3 caracteres' },
-                validate: (v) => (/[<>]/.test(v) ? 'Contiene caracteres inválidos' : true),
+                pattern: {
+                  value: /^[A-Za-z0-9&\s]+$/,
+                  message: 'Solo se permiten letras, números, espacios y el símbolo &'
+                },
+                validate: (v) =>
+                  /[<>]/.test(v) ? 'Contiene caracteres inválidos' : true,
               })}
             />
             <div className="invalid-feedback">{errors.entidadEmisora?.message}</div>
@@ -250,8 +265,19 @@ export default function FormStep2({ register, errors, control, watch, next, back
                 required: 'Vigencia obligatoria',
                 validate: (v) => {
                   if (!v) return 'Vigencia obligatoria';
+
+                  const hoy = new Date();
+                  hoy.setHours(0, 0, 0, 0);
+
                   const exp = watchFechaExp;
-                  if (exp && v < exp) return 'La vigencia debe ser igual o posterior a la fecha de expedición';
+
+                  // 1) No puede ser futura
+                  if (v > hoy) return 'La vigencia no puede ser una fecha futura';
+
+                  // 2) Debe ser igual o posterior a la expedición
+                  if (exp && v < exp)
+                    return 'La vigencia debe ser igual o posterior a la fecha de expedición';
+
                   return true;
                 },
               }}
@@ -275,7 +301,7 @@ export default function FormStep2({ register, errors, control, watch, next, back
           <FaLongArrowAltLeft /> Atrás
         </button>
 
-        <button className="btn buttons" onClick={next}>
+        <button className="btn buttons" onClick={handleSubmit(onValid)}>
           Siguiente <FaLongArrowAltRight />
         </button>
       </div>

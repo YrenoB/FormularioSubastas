@@ -1,6 +1,6 @@
 import { FaLongArrowAltLeft, FaCheck } from 'react-icons/fa';
 
-export default function FormStep4({ register, errors, back  }) {
+export default function FormStep4({ register, errors, back }) {
   return (
     <>
       <div className="borderGreen rounded-4 mb-3 p-4">
@@ -19,7 +19,7 @@ export default function FormStep4({ register, errors, back  }) {
         
 
         <div className="form-check mb-3 custom-check">
-          <input className={`form-check-input ${errors.acepta ? 'is-invalid' : ''}`} type="checkbox" id="acepta" {...register('acepta', { required: 'Debe aceptar los términos y condiciones' })} />
+          <input id="acepta" className={`form-check-input ${errors.acepta ? 'is-invalid' : ''}`} type="checkbox" {...register('acepta', { required: 'Debe aceptar los términos y condiciones' })} />
           <label className="form-check-label" htmlFor="acepta">
             Declaro bajo la gravedad de juramento que los datos son veraces y que acepto los términos y condiciones de la subasta.
           </label>
@@ -51,19 +51,27 @@ export default function FormStep4({ register, errors, back  }) {
           <label className="form-label">Nombre completo del Representante Legal *</label>
             <input
               type="text"
-              className={`form-control ${errors.repLegal ? 'is-invalid' : ''}`}
-              {...register('repLegal', {
+              className={`form-control ${errors.firmaNombre ? 'is-invalid' : ''}`}
+              {...register('firmaNombre', {
                 required: 'Nombre del Representante Legal obligatorio',
                 minLength: { value: 3, message: 'Mínimo 3 caracteres' },
                 validate: (v) => (/[<>]/.test(v) ? 'Contiene caracteres inválidos' : true),
               })}
             />
-            <div className="invalid-feedback">{errors.repLegal?.message}</div>
+            <div className="invalid-feedback">{errors.firmaNombre?.message}</div>
         </div>
         
         <div className="col-md-12">
           <label className="form-label">Fecha de Diligenciamiento </label>
-          <input className="form-control" value={new Date().toLocaleDateString()} readOnly disabled/>
+          <input
+            type="text"
+            className={`form-control ${errors.firmaFecha ? 'is-invalid' : ''}`}
+            readOnly
+            value={new Date().toLocaleDateString("es-CO")}
+            {...register("firmaFecha", {
+              required: "La fecha de diligenciamiento es obligatoria",
+            })}
+          />
         </div>
       </div>
 
@@ -72,7 +80,7 @@ export default function FormStep4({ register, errors, back  }) {
           <FaLongArrowAltLeft /> Atrás
         </button>
 
-        <button type="submit" className="btn buttons">
+        <button type="submit" className="btn buttons" >
           Enviar formulario <FaCheck />
         </button>
       </div>

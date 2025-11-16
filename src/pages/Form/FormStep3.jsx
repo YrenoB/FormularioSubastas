@@ -1,7 +1,10 @@
 import { FaTrash, FaPlus } from "react-icons/fa";
 import { FaLongArrowAltLeft, FaLongArrowAltRight  } from 'react-icons/fa';
 
-export default function FormStep3({ register, errors, fields, append, remove, next, back }) {
+export default function FormStep3({ register, errors, fields, append, remove, handleSubmit, next, back }) {
+
+  const onValid = () => next();
+
   return (
     <>
       <h4>III. JUSTIFICACIÓN Y DESCRIPCIÓN DE PROYECTOS</h4>
@@ -28,10 +31,19 @@ export default function FormStep3({ register, errors, fields, append, remove, ne
 
                 <div className="col-md-12">
                   <label className="form-label">Nombre del Proyecto *</label>
-                  <input
-                    className={`form-control ${errors.proyectos?.[index]?.nombre ? 'is-invalid' : ''}`}
-                    {...register(`proyectos.${index}.nombre`, { required: 'Nombre obligatorio', minLength: { value: 5, message: 'Mínimo 5 caracteres' } })}
-                  />
+                    <input
+                      className={`form-control ${errors.proyectos?.[index]?.nombre ? 'is-invalid' : ''}`}
+                      {...register(`proyectos.${index}.nombre`, {
+                        required: 'Nombre obligatorio',
+                        minLength: { value: 5, message: 'Mínimo 5 caracteres' },
+                        validate: (v) => {
+                          if (/[<>]/.test(v)) return 'Contiene caracteres inválidos';
+                          if (!/^[A-Za-z0-9 _\-&]+$/.test(v))
+                            return 'Sólo se permiten letras, números, espacios, -, _, &';
+                          return true;
+                        }
+                      })}
+                    />
                   <div className="invalid-feedback">{errors.proyectos?.[index]?.nombre?.message}</div>
                 </div>
 
@@ -83,7 +95,7 @@ export default function FormStep3({ register, errors, fields, append, remove, ne
           <FaLongArrowAltLeft /> Atrás
         </button>
 
-        <button className="btn buttons" onClick={next}>
+        <button className="btn buttons" onClick={handleSubmit(onValid)}>
           Siguiente <FaLongArrowAltRight />
         </button>
       </div>
